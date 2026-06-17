@@ -1,7 +1,5 @@
 name: Qlik Production Promotion
 
-run-name: Qlik CICD ${{ inputs.jira_key || github.event.pull_request.head.ref }} -> ${{ inputs.artifact_ref || github.event.pull_request.merge_commit_sha }}
-
 on:
   pull_request_review:
     types: [submitted]
