@@ -35,8 +35,31 @@ permissions:
   issues: write
 
 jobs:
+  readiness-on-approval:
+    name: Validate signed-off package on PR approval
+    if: >
+      github.event_name == 'pull_request_review' &&
+      github.event.review.state == 'approved' &&
+      github.event.pull_request.base.ref == 'main'
+    uses: NilsenBA/ARBRepo_Central/.github/workflows/reusable-qlik-prod-promotion.yml@main
+    with:
+      operation: readiness
+      jira_key: ${{ github.event.pull_request.head.ref }}
+      artifact_repo_full_name: ${{ github.repository }}
+      artifact_ref: ${{ github.event.pull_request.head.sha }}
+      source_branch: ${{ github.event.pull_request.head.ref }}
+      source_sha: ${{ github.event.pull_request.head.sha }}
+      main_sha: ${{ github.event.pull_request.base.sha }}
+      dry_run: true
+    secrets: inherit
+
   deploy-production:
-    name: Call central Qlik production workflow
+    name: Deploy merged or manually selected package
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.merged == true &&
+       github.event.pull_request.base.ref == 'main')
     uses: NilsenBA/ARBRepo_Central/.github/workflows/reusable-qlik-prod-promotion.yml@main
     with:
       operation: deploy
