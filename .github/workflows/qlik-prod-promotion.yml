@@ -65,9 +65,9 @@ jobs:
       operation: deploy
       jira_key: ${{ github.event_name == 'workflow_dispatch' && inputs.jira_key || github.event.pull_request.head.ref }}
       artifact_repo_full_name: ${{ github.repository }}
-      artifact_ref: ${{ github.event_name == 'workflow_dispatch' && inputs.artifact_ref || github.event.pull_request.merge_commit_sha }}
+      artifact_ref: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.event.pull_request.merge_commit_sha }}
       source_branch: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.event.pull_request.head.ref }}
-      source_sha: ${{ github.event_name == 'workflow_dispatch' && inputs.artifact_ref || github.event.pull_request.head.sha }}
+      source_sha: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.event.pull_request.head.sha }}
       main_sha: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.pull_request.merge_commit_sha }}
       dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
     secrets: inherit
